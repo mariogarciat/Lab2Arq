@@ -5,8 +5,11 @@
  */
 package com.udea.lab2arq.controller;
 
+import com.udea.lab2arq.modelo.Curso;
 import com.udea.lab2arq.modelo.Estudiante;
 import com.udea.lab2arq.modelo.EstudianteFacadeLocal;
+import static com.udea.lab2arq.modelo.Estudiante_.cursoCollection;
+import java.util.Collection;
 import java.util.Locale;
 import javax.ejb.EJB;
 import javax.faces.component.UIComponent;
@@ -25,6 +28,7 @@ public class EstudianteBean {
     private String lastName;
     private String level;
     private String email;
+    private Collection<Curso> cursos;
 
     public EstudianteFacadeLocal getEstudianteFacade() {
         return estudianteFacade;
@@ -63,9 +67,13 @@ public class EstudianteBean {
         est.setApellido(lastName);
         est.setNivel(level);
         est.setEmail(email);
+        est.setCursoCollection(cursos);
         this.estudianteFacade.create(est);
     }
-
+    
+    public void search(){
+        
+    }
     /**
      * @return the id
      */
@@ -148,4 +156,8 @@ public class EstudianteBean {
         locale = new Locale(language);
         FacesContext.getCurrentInstance().getViewRoot().setLocale(locale);
     }
+    /**
+     *
+     */
+
 }

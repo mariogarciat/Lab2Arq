@@ -48,7 +48,6 @@
                 <p:outputLabel value="#{msg.correo}" for="correo" />
                 <p:inputText id="nivel" label="#{msg.correo}" value="#{EstudianteBean.email}" required="true">
                     <f:attribute name="requiredMessage" value="#{msg.correo_requerido}" />
-                    <f:validateLongRange minimum="1" maximum="9" />
                 </p:inputText>
                 <p:message for="correo" styleClass="errmsg" />
             </h:panelGrid>
@@ -57,7 +56,7 @@
             <p:messages id="msg" />
             <p:captcha id="captcha" />
             <br />
-            <p:commandButton id="boton" value="#{msg.consultar}" actionListener="#{EstudianteBean.buscarMaterias}" binding="#{EstudianteBean.boton}" ajax="false" disabled="#{EstudianteBean.disableBuscar}"/>
+            <p:commandButton id="boton" value="#{msg.consultar}" actionListener="#{EstudianteBean.search()}" binding="#{EstudianteBean.find}"/>
 
         </h:form>
 
