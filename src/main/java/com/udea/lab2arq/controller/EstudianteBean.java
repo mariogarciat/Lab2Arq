@@ -146,7 +146,6 @@ public class EstudianteBean {
     }
     public void changeLanguage(String language) {
         locale = new Locale(language);
-        FacesContext.getCurrentInstance().getViewRoot()
-                .setLocale(new Locale(language));
+        FacesContext.getCurrentInstance().getViewRoot().setLocale(locale);
     }
 }

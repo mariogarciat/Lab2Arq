@@ -1,12 +1,67 @@
 <?xml version='1.0' encoding='UTF-8' ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:h="http://xmlns.jcp.org/jsf/html">
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
     <h:head>
-        <title>Facelet Title</title>
+        <title><h:outputText value="#{msg.title}" /></title>
+
+        <link rel="stylesheet" type="text/css" href="css/style.css" />
     </h:head>
     <h:body>
-        Hello from Facelets
+        <h:form>
+            <h:commandButton action="#{EstudianteBean.changeLanguage('')}" value="English" image="http://estaticos01.elmundo.es/elmundodeporte/especiales/2009/06/copa_confederaciones/img/banderas/eeuu_peq.png" /> <!--Botón para cambiar al idioma inglés -->
+            <h:commandButton action="#{EstudianteBean.changeLanguage('es')}" value="Español" image="http://es.cyberdodo.com/templates/default/img/header-icons/es.png" /> <!--Botón para cambiar al idioma español -->
+        </h:form>
+
+        <h:form prependId="false">
+            <h1><h:outputText value="#{msg.matricula_detalles}" /></h1>
+
+            <h:panelGrid columns="3">
+                <p:outputLabel value="#{msg.cedula}" for="cedula" />
+                <p:inputText id="cedula" label="#{msg.cedula}" value="#{EstudianteBean.id}" required="true">
+                    <f:attribute name="requiredMessage" value="#{msg.cedula_requerida}" />
+                </p:inputText>
+                <p:message for="cedula" styleClass="errmsg" />
+
+                <p:outputLabel value="#{msg.nombres}" for="nombres" />
+                <p:inputText id="nombres" label="#{msg.nombres}" value="#{EstudianteBean.name}" required="true">
+                    <f:attribute name="requiredMessage" value="#{msg.nombres_requeridos}" />
+                </p:inputText>
+                <p:message for="nombres" styleClass="errmsg" />
+
+                <p:outputLabel value="#{msg.apellidos}" for="apellidos" />
+                <p:inputText id="apellidos" label="#{msg.apellidos}" value="#{EstudianteBean.lastName}" required="true">
+                    <f:attribute name="requiredMessage" value="#{msg.apellidos_requeridos}" />
+                </p:inputText>
+                <p:message for="apellidos" styleClass="errmsg" />
+
+                <p:outputLabel value="#{msg.nivel}" for="nivel" />
+                <p:inputText id="nivel" label="#{msg.nivel}" value="#{EstudianteBean.level}" required="true">
+                    <f:attribute name="requiredMessage" value="#{msg.nivel_requerido}" />
+                    <f:validateLongRange minimum="1" maximum="9" />
+                </p:inputText>
+                <p:message for="nivel" styleClass="errmsg" />
+
+                <p:outputLabel value="#{msg.correo}" for="correo" />
+                <p:inputText id="nivel" label="#{msg.correo}" value="#{EstudianteBean.email}" required="true">
+                    <f:attribute name="requiredMessage" value="#{msg.correo_requerido}" />
+                    <f:validateLongRange minimum="1" maximum="9" />
+                </p:inputText>
+                <p:message for="correo" styleClass="errmsg" />
+            </h:panelGrid>
+
+            <h2>Captcha</h2>
+            <p:messages id="msg" />
+            <p:captcha id="captcha" />
+            <br />
+            <p:commandButton id="boton" value="#{msg.consultar}" actionListener="#{EstudianteBean.buscarMaterias}" binding="#{EstudianteBean.boton}" ajax="false" disabled="#{EstudianteBean.disableBuscar}"/>
+
+        </h:form>
+
+        <script library="primefaces" name="jquery/jquery.js" />
     </h:body>
 </html>
 
