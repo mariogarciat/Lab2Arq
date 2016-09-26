@@ -45,11 +45,11 @@
                 </p:inputText>
                 <p:message for="nivel" styleClass="errmsg" />
 
-                <p:outputLabel value="#{msg.correo}" for="correo" />
-                <p:inputText id="nivel" label="#{msg.correo}" value="#{EstudianteBean.email}" required="true">
+               <p:outputLabel value="#{msg.correo}" for="correo" />
+               <p:inputText id="correo" label="#{msg.correo}" value="#{EstudianteBean.email}" required="true">
                     <f:attribute name="requiredMessage" value="#{msg.correo_requerido}" />
                 </p:inputText>
-                <p:message for="correo" styleClass="errmsg" />
+                <p:message for="correo" styleClass="errmsg" />  
             </h:panelGrid>
 
             <h2>Captcha</h2>
