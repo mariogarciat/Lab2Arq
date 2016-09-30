@@ -6,7 +6,7 @@
       xmlns:f="http://xmlns.jcp.org/jsf/core"
       xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
     <h:head>
-        <title><h:outputText value="#{msg.title}" /></title>
+        <title><h:outputText value="#{msg.titulo}" /></title>
 
         <link rel="stylesheet" type="text/css" href="css/style.css" />
     </h:head>
@@ -50,13 +50,16 @@
                     <f:attribute name="requiredMessage" value="#{msg.correo_requerido}" />
                 </p:inputText>
                 <p:message for="correo" styleClass="errmsg" />  
+                   
             </h:panelGrid>
+            
 
             <h2>Captcha</h2>
             <p:messages id="msg" />
             <p:captcha id="captcha" />
             <br />
-            <p:commandButton id="boton" value="#{msg.consultar}" actionListener="#{EstudianteBean.search()}" binding="#{EstudianteBean.find}"/>
+            
+            <p:commandButton id="boton" value="#{msg.consultar}" actionListener="#{EstudianteBean.matricular()}" binding="#{EstudianteBean.find}" ajax="false"/>
 
         </h:form>
 

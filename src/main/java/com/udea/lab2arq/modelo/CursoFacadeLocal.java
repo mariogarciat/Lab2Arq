@@ -26,7 +26,10 @@ public interface CursoFacadeLocal {
     List<Curso> findAll();
 
     List<Curso> findRange(int[] range);
+    
+    List<Curso> findAllByLevel(int level);
 
     int count();
-    
+   
+
 }
