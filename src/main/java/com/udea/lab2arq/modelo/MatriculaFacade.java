@@ -12,10 +12,11 @@ import javax.persistence.PersistenceContext;
 
 /**
  *
- * @author mario.garciat
+ * @author Camilo
  */
 @Stateless
-public class CursoFacade extends AbstractFacade<Curso> implements CursoFacadeLocal {
+public class MatriculaFacade extends AbstractFacade<Matricula> implements MatriculaFacadeLocal {
+
     @PersistenceContext(unitName = "persistence")
     private EntityManager em;
 
@@ -24,15 +25,13 @@ public class CursoFacade extends AbstractFacade<Curso> implements CursoFacadeLoc
         return em;
     }
 
-    public CursoFacade() {
-        super(Curso.class);
+    public MatriculaFacade() {
+        super(Matricula.class);
     }
     
-  @Override
-  public List<Curso> findAllByLevel(String level) {
-    return em.createNamedQuery("Curso.findByNivel", Curso.class)
-            .setParameter("nivel", level)
-            .getResultList();
-  }
+      @Override
+    public List<Matricula> findAllByStudent(String cedula) {
+        return em.createNamedQuery("Matricula.findByIdestudiante", Matricula.class).setParameter("idestudiante", cedula).getResultList();
+    }
     
 }

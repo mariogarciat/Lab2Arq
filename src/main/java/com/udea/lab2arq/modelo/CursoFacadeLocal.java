@@ -27,7 +27,7 @@ public interface CursoFacadeLocal {
 
     List<Curso> findRange(int[] range);
     
-    List<Curso> findAllByLevel(int level);
+    List<Curso> findAllByLevel(String level);
 
     int count();
    

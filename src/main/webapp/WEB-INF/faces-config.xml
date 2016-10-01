@@ -14,13 +14,6 @@
         <managed-bean-scope>session</managed-bean-scope>
     </managed-bean>
     <navigation-rule>
-        <from-view-id>/index.xhtml</from-view-id>
-        <navigation-case>
-            <from-outcome>submit</from-outcome>
-            <to-view-id>/result.xhtml</to-view-id>
-        </navigation-case>
-    </navigation-rule>
-    <navigation-rule>
         <from-view-id>/result.xhtml</from-view-id>
         <navigation-case>
             <from-outcome>back</from-outcome>
@@ -52,5 +45,11 @@
         <managed-bean-class>com.udea.lab2arq.controller.EstudianteBean</managed-bean-class>
         <managed-bean-scope>session</managed-bean-scope>
     </managed-bean>
-    
+    <navigation-rule>
+        <from-view-id>/index.xhtml</from-view-id>
+        <navigation-case>
+            <from-outcome>submit</from-outcome>
+            <to-view-id>/result.xhtml</to-view-id>
+        </navigation-case>
+    </navigation-rule>
 </faces-config>

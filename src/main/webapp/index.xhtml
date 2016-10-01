@@ -39,28 +39,36 @@
                 <p:message for="apellidos" styleClass="errmsg" />
 
                 <p:outputLabel value="#{msg.nivel}" for="nivel" />
-                <p:inputText id="nivel" label="#{msg.nivel}" value="#{EstudianteBean.level}" required="true">
+                <p:inputText id="nivel" label="#{msg.nivel}" value="#{EstudianteBean.level}" required="true" disabled="#{EstudianteBean.disableDatos}">
                     <f:attribute name="requiredMessage" value="#{msg.nivel_requerido}" />
                     <f:validateLongRange minimum="1" maximum="9" />
                 </p:inputText>
                 <p:message for="nivel" styleClass="errmsg" />
 
-               <p:outputLabel value="#{msg.correo}" for="correo" />
-               <p:inputText id="correo" label="#{msg.correo}" value="#{EstudianteBean.email}" required="true">
+                <p:outputLabel value="#{msg.correo}" for="correo" />
+                <p:inputText id="correo" label="#{msg.correo}" value="#{EstudianteBean.email}" required="true">
                     <f:attribute name="requiredMessage" value="#{msg.correo_requerido}" />
                 </p:inputText>
                 <p:message for="correo" styleClass="errmsg" />  
-                   
-            </h:panelGrid>
-            
 
+                <c:if test="#{EstudianteBean.disableCursos == false}" >
+                    <p:outputLabel value="#{msg.codigo}" for="codigo" />
+                    <p:selectManyCheckbox id="codigo" layout="grid" columns="1" label="#{msg.codigo}" value="#{EstudianteBean.cursos_seleccionados}" disabled="#{EstudianteBean.disableCursos}" rendered="true">
+                        <f:selectItems value="#{EstudianteBean.cursos}" var="curso" itemValue="#{curso.codigo}" itemLabel="#{curso.nombre}"/>
+                    </p:selectManyCheckbox>
+                    <p:message for="codigo" styleClass="errmsg"/>
+                </c:if>
+            </h:panelGrid>
+
+            <c:if test="#{EstudianteBean.disableCursos == true}">
             <h2>Captcha</h2>
             <p:messages id="msg" />
             <p:captcha id="captcha" />
+            </c:if>
             <br />
-            
-            <p:commandButton id="boton" value="#{msg.consultar}" actionListener="#{EstudianteBean.matricular()}" binding="#{EstudianteBean.find}" ajax="false"/>
 
+            <p:commandButton id="boton" value="#{msg.consultar}" actionListener="#{EstudianteBean.search()}" disabled="#{EstudianteBean.disableDatos}" binding="#{EstudianteBean.find}" ajax="false" />
+            <p:commandButton id="boton2" value="#{msg.guardar}" actionListener="#{EstudianteBean.matricular()}" disabled="#{!EstudianteBean.disableDatos}" action="submit" />
         </h:form>
 
         <script library="primefaces" name="jquery/jquery.js" />

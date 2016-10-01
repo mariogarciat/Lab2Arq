@@ -10,7 +10,11 @@ import com.udea.lab2arq.modelo.CursoFacadeLocal;
 import com.udea.lab2arq.modelo.Estudiante;
 import com.udea.lab2arq.modelo.EstudianteFacadeLocal;
 import static com.udea.lab2arq.modelo.Estudiante_.cursoCollection;
+import com.udea.lab2arq.modelo.Matricula;
+import com.udea.lab2arq.modelo.MatriculaFacadeLocal;
+import com.udea.lab2arq.modelo.MatriculaPK;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Locale;
@@ -22,25 +26,29 @@ import javax.faces.context.FacesContext;
  *
  * @author mario.garciat
  */
-public class EstudianteBean implements Serializable{
+public class EstudianteBean implements Serializable {
 
     @EJB
     private EstudianteFacadeLocal estudianteFacade;
     @EJB
     private CursoFacadeLocal cursoFacade;
+    @EJB
+    private MatriculaFacadeLocal matriculaFacade;
     private String id;
     private String name;
     private String lastName;
     private String level;
     private String email;
-    private List cursos;
-    
+    private List cursos;         // Lista con las materias x nivel
+    private List cursos_m;       //Cursos matriculados
+    private List cursos_a;       //Cursos actuales
+    private String[] cursos_seleccionados;
+
     private UIComponent find;
     private UIComponent save;
-    
-        // Lista con las materias x nivel
 
-    
+    private boolean disableCursos = true;
+    private boolean disableDatos = false;
 
     public EstudianteFacadeLocal getEstudianteFacade() {
         return estudianteFacade;
@@ -52,7 +60,6 @@ public class EstudianteBean implements Serializable{
 
     public EstudianteBean() {
     }
-
 
     public UIComponent getFind() {
         return find;
@@ -71,35 +78,63 @@ public class EstudianteBean implements Serializable{
     }
 
     public void matricular() {
-        Estudiante est = new Estudiante();
-        est.setDocumento(id);
-        est.setNombre(name);
-        est.setApellido(lastName);
-        est.setNivel(level);
-        est.setEmail(email);
-        this.estudianteFacade.create(est);
-    }
-    
-    public void search(){
-              
-        setCursos(this.getCursoFacade().findAllByLevel(Integer.parseInt(level)));
-        int i;
-        for(i=0;i<=getCursos().size();i++)
-        {
-            System.out.println(getCursos().get(i));
-        }
-                
-        /* materias = this.materiaFacade.findAllByLevel(nivel);
         
-     
-        // Consultar todas las materias actuales del estudiante
-        materias_actuales = this.estudiantepormateriaFacade.findAllByStudent(cedula);
-        materias_seleccionadas = new int[materias_actuales.size()];
+        Estudiante est = this.estudianteFacade.find(id);
+
+        if (est == null) {
+            est = new Estudiante();
+            est.setDocumento(id);
+            est.setNombre(name);
+            est.setApellido(lastName);
+            est.setNivel(level);
+            est.setEmail(email);
+            this.estudianteFacade.create(est);
+        }
+
         int i;
-        for (i = 0; i < materias_actuales.size(); i++) {
-            materias_seleccionadas[i] = ((Estudiantepormateria) materias_actuales.get(i)).getEstudiantepormateriaPK().getCodigo();
-        }*/
+
+        Matricula em;
+
+        for (i = 0; i < cursos_seleccionados.length; i++) {
+            em = new Matricula();
+
+            em.setMatriculaPK(new MatriculaPK(est.getDocumento(), cursos_seleccionados[i]));
+
+            this.getMatriculaFacade().create(em);
+        }
+
+        // Consultar todas las materias actuales del estudiante
+        cursos_a = this.getMatriculaFacade().findAllByStudent(est.getDocumento());
+
+        cursos_m = new ArrayList<Curso>();
+        for (i = 0; i < cursos_a.size(); i++) {
+            String c = ((Matricula) cursos_a.get(i)).getMatriculaPK().getIdcurso();
+            cursos_m.add(getCursoByCode(c));
+        }
+
     }
+//se comparan los códigos para encontrar la materia correspondiente
+    private Curso getCursoByCode(String codigo) { 
+        int l = cursos.size();
+        Curso m = null;
+        for (int i = 0; i < l; i++) { 
+            m = (Curso) cursos.get(i);
+            if (codigo.equals(m.getCodigo())) { 
+                return m;
+            }
+        }
+        return m; //si llega acá es porque no existe una materia con ese código y se retorna null
+    }
+
+    public void search() {
+
+        cursos = this.cursoFacade.findAllByLevel(level);
+        cursos_a = this.getMatriculaFacade().findAllByStudent(id);
+        disableDatos=true;
+        disableCursos = false; //disable validar
+
+    }
+
     /**
      * @return the id
      */
@@ -172,12 +207,15 @@ public class EstudianteBean implements Serializable{
 
     private Locale locale = FacesContext.getCurrentInstance()
             .getViewRoot().getLocale();
+
     public Locale getLocale() {
         return locale;
     }
+
     public String getLanguage() {
         return locale.getLanguage();
     }
+
     public void changeLanguage(String language) {
         locale = new Locale(language);
         FacesContext.getCurrentInstance().getViewRoot().setLocale(locale);
@@ -209,6 +247,90 @@ public class EstudianteBean implements Serializable{
      */
     public void setCursos(List cursos) {
         this.cursos = cursos;
+    }
+
+    /**
+     * @return the disableCursos
+     */
+    public boolean isDisableCursos() {
+        return disableCursos;
+    }
+
+    /**
+     * @param disableCursos the disableCursos to set
+     */
+    public void setDisableCursos(boolean disableCursos) {
+        this.disableCursos = disableCursos;
+    }
+
+    /**
+     * @return the cursos_seleccionados
+     */
+    public String[] getCursos_seleccionados() {
+        return cursos_seleccionados;
+    }
+
+    /**
+     * @param cursos_seleccionados the cursos_seleccionados to set
+     */
+    public void setCursos_seleccionados(String[] cursos_seleccionados) {
+        this.cursos_seleccionados = cursos_seleccionados;
+    }
+
+    /**
+     * @return the cursos_m
+     */
+    public List getCursos_m() {
+        return cursos_m;
+    }
+
+    /**
+     * @param cursos_m the cursos_m to set
+     */
+    public void setCursos_m(List cursos_m) {
+        this.cursos_m = cursos_m;
+    }
+
+    /**
+     * @return the cursos_a
+     */
+    public List getCursos_a() {
+        return cursos_a;
+    }
+
+    /**
+     * @param cursos_a the cursos_a to set
+     */
+    public void setCursos_a(List cursos_a) {
+        this.cursos_a = cursos_a;
+    }
+
+    /**
+     * @return the matriculaFacade
+     */
+    public MatriculaFacadeLocal getMatriculaFacade() {
+        return matriculaFacade;
+    }
+
+    /**
+     * @param matriculaFacade the matriculaFacade to set
+     */
+    public void setMatriculaFacade(MatriculaFacadeLocal matriculaFacade) {
+        this.matriculaFacade = matriculaFacade;
+    }
+
+    /**
+     * @return the disableDatos
+     */
+    public boolean isDisableDatos() {
+        return disableDatos;
+    }
+
+    /**
+     * @param disableDatos the disableDatos to set
+     */
+    public void setDisableDatos(boolean disableDatos) {
+        this.disableDatos = disableDatos;
     }
 
 }
