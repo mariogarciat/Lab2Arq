@@ -31,8 +31,9 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Curso.findAll", query = "SELECT c FROM Curso c"),
     @NamedQuery(name = "Curso.findByCodigo", query = "SELECT c FROM Curso c WHERE c.codigo = :codigo"),
     @NamedQuery(name = "Curso.findByNombre", query = "SELECT c FROM Curso c WHERE c.nombre = :nombre"),
-    @NamedQuery(name = "Curso.findByNivel", query = "SELECT c FROM Curso c WHERE c.nivel = :nivel"),
-    @NamedQuery(name = "Curso.findByCreditos", query = "SELECT c FROM Curso c WHERE c.creditos = :creditos")})
+    @NamedQuery(name = "Curso.findByNivel", query = "SELECT c FROM Curso c WHERE c.nivel = :nivel")
+})
+    
 public class Curso implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
@@ -51,10 +52,6 @@ public class Curso implements Serializable {
     @Size(min = 1, max = 2)
     @Column(name = "nivel")
     private String nivel;
-    @Basic(optional = false)
-    @NotNull
-    @Column(name = "creditos")
-    private int creditos;
     @ManyToMany(mappedBy = "cursoCollection")
     private Collection<Estudiante> estudianteCollection;
 
@@ -65,11 +62,10 @@ public class Curso implements Serializable {
         this.codigo = codigo;
     }
 
-    public Curso(String codigo, String nombre, String nivel, int creditos) {
+    public Curso(String codigo, String nombre, String nivel) {
         this.codigo = codigo;
         this.nombre = nombre;
         this.nivel = nivel;
-        this.creditos = creditos;
     }
 
     public String getCodigo() {
@@ -95,15 +91,7 @@ public class Curso implements Serializable {
     public void setNivel(String nivel) {
         this.nivel = nivel;
     }
-
-    public int getCreditos() {
-        return creditos;
-    }
-
-    public void setCreditos(int creditos) {
-        this.creditos = creditos;
-    }
-
+    
     @XmlTransient
     public Collection<Estudiante> getEstudianteCollection() {
         return estudianteCollection;

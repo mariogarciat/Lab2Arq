@@ -17,23 +17,24 @@
         </h:form>
 
         <h:form prependId="false">
+            <f:event listener="#{estudianteBean.validateForm}" type="postValidate" />
             <h1><h:outputText value="#{msg.matricula_detalles}" /></h1>
 
             <h:panelGrid columns="3">
                 <p:outputLabel value="#{msg.cedula}" for="cedula" />
-                <p:inputText id="cedula" label="#{msg.cedula}" value="#{EstudianteBean.id}" required="true">
+                <p:inputText id="cedula" label="#{msg.cedula}" value="#{EstudianteBean.id}" required="true" disabled="#{EstudianteBean.disableDatos}">
                     <f:attribute name="requiredMessage" value="#{msg.cedula_requerida}" />
                 </p:inputText>
                 <p:message for="cedula" styleClass="errmsg" />
 
                 <p:outputLabel value="#{msg.nombres}" for="nombres" />
-                <p:inputText id="nombres" label="#{msg.nombres}" value="#{EstudianteBean.name}" required="true">
+                <p:inputText id="nombres" label="#{msg.nombres}" value="#{EstudianteBean.name}" required="true" disabled="#{EstudianteBean.disableDatos}">
                     <f:attribute name="requiredMessage" value="#{msg.nombres_requeridos}" />
                 </p:inputText>
                 <p:message for="nombres" styleClass="errmsg" />
 
                 <p:outputLabel value="#{msg.apellidos}" for="apellidos" />
-                <p:inputText id="apellidos" label="#{msg.apellidos}" value="#{EstudianteBean.lastName}" required="true">
+                <p:inputText id="apellidos" label="#{msg.apellidos}" value="#{EstudianteBean.lastName}" required="true" disabled="#{EstudianteBean.disableDatos}">
                     <f:attribute name="requiredMessage" value="#{msg.apellidos_requeridos}" />
                 </p:inputText>
                 <p:message for="apellidos" styleClass="errmsg" />
@@ -46,7 +47,7 @@
                 <p:message for="nivel" styleClass="errmsg" />
 
                 <p:outputLabel value="#{msg.correo}" for="correo" />
-                <p:inputText id="correo" label="#{msg.correo}" value="#{EstudianteBean.email}" required="true">
+                <p:inputText id="correo" label="#{msg.correo}" value="#{EstudianteBean.email}" required="true" disabled="#{EstudianteBean.disableDatos}">
                     <f:attribute name="requiredMessage" value="#{msg.correo_requerido}" />
                 </p:inputText>
                 <p:message for="correo" styleClass="errmsg" />  

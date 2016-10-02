@@ -18,9 +18,14 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Locale;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import javax.ejb.EJB;
+import javax.faces.application.FacesMessage;
 import javax.faces.component.UIComponent;
+import javax.faces.component.UIInput;
 import javax.faces.context.FacesContext;
+import javax.faces.event.ComponentSystemEvent;
 
 /**
  *
@@ -78,7 +83,7 @@ public class EstudianteBean implements Serializable {
     }
 
     public void matricular() {
-        
+
         Estudiante est = this.estudianteFacade.find(id);
 
         if (est == null) {
@@ -114,12 +119,13 @@ public class EstudianteBean implements Serializable {
 
     }
 //se comparan los códigos para encontrar la materia correspondiente
-    private Curso getCursoByCode(String codigo) { 
+
+    private Curso getCursoByCode(String codigo) {
         int l = cursos.size();
         Curso m = null;
-        for (int i = 0; i < l; i++) { 
+        for (int i = 0; i < l; i++) {
             m = (Curso) cursos.get(i);
-            if (codigo.equals(m.getCodigo())) { 
+            if (codigo.equals(m.getCodigo())) {
                 return m;
             }
         }
@@ -130,7 +136,7 @@ public class EstudianteBean implements Serializable {
 
         cursos = this.cursoFacade.findAllByLevel(level);
         cursos_a = this.getMatriculaFacade().findAllByStudent(id);
-        disableDatos=true;
+        disableDatos = true;
         disableCursos = false; //disable validar
 
     }
@@ -333,4 +339,108 @@ public class EstudianteBean implements Serializable {
         this.disableDatos = disableDatos;
     }
 
+    public void validateForm(ComponentSystemEvent event) {
+        FacesContext fc = FacesContext.getCurrentInstance();
+
+        UIComponent components = event.getComponent();
+
+        //Valida cedula
+        UIInput uiInputCedula = (UIInput) components.findComponent("cedula");
+        String cedula = uiInputCedula.getLocalValue() == null ? ""
+                : uiInputCedula.getLocalValue().toString();
+        String cedulaId = uiInputCedula.getClientId();
+        try {
+            Integer.parseInt(cedula);
+        } catch (NumberFormatException nfe) {
+            if (locale.getLanguage().equals(new Locale("es").getLanguage())) {
+                FacesMessage msgCedula = new FacesMessage("La cedula debe contener solo numeros.");
+                msgCedula.setSeverity(FacesMessage.SEVERITY_ERROR);
+                fc.addMessage(cedulaId, msgCedula);
+                fc.renderResponse();
+            } else {
+                FacesMessage msgCedula = new FacesMessage("The identification should contain only numbers.");
+                msgCedula.setSeverity(FacesMessage.SEVERITY_ERROR);
+                fc.addMessage(cedulaId, msgCedula);
+                fc.renderResponse();
+            }
+        }
+
+        //Valida nombre
+        UIInput uiInputNombre = (UIInput) components.findComponent("nombres");
+        String nombres = uiInputNombre.getLocalValue() == null ? ""
+                : uiInputNombre.getLocalValue().toString();
+        String nombresId = uiInputNombre.getClientId();
+        Pattern patron = Pattern.compile("[^A-Za-z ]");
+        Matcher encajaNombre = patron.matcher(nombres);
+
+        if (encajaNombre.find()) {
+            if (locale.getLanguage().equals(new Locale("es").getLanguage())) {
+                FacesMessage msgNombres = new FacesMessage("Solo se permiten letras y espacios para los nombres.");
+                msgNombres.setSeverity(FacesMessage.SEVERITY_ERROR);
+                fc.addMessage(nombresId, msgNombres);
+                fc.renderResponse();
+            } else {
+                FacesMessage msgNombres = new FacesMessage("Only letters and spaces are allowed for names.");
+                msgNombres.setSeverity(FacesMessage.SEVERITY_ERROR);
+                fc.addMessage(nombresId, msgNombres);
+                fc.renderResponse();
+            }
+        }
+        
+        //Valida apellido
+        UIInput uiInputApellido = (UIInput) components.findComponent("apellidos");
+        String apellidos = uiInputApellido.getLocalValue() == null ? ""
+                : uiInputApellido.getLocalValue().toString();
+        String apellidosId = uiInputApellido.getClientId();
+        Matcher encajaApellido = patron.matcher(apellidos);
+
+        if (encajaApellido.find()) {
+            if (locale.getLanguage().equals(new Locale("es").getLanguage())) {
+                FacesMessage msgApellidos = new FacesMessage("Solo se permiten letras y espacios para los apellidos.");
+                msgApellidos.setSeverity(FacesMessage.SEVERITY_ERROR);
+                fc.addMessage(apellidosId, msgApellidos);
+                fc.renderResponse();
+            } else {
+                FacesMessage msgApellidos = new FacesMessage("Only letters and spaces are allowed for surnames.");
+                msgApellidos.setSeverity(FacesMessage.SEVERITY_ERROR);
+                fc.addMessage(apellidosId, msgApellidos);
+                fc.renderResponse();
+            }
+        }
+        
+        //Valida semestre
+        UIInput uiInputSemestre = (UIInput) components.findComponent("nivel");
+        String semestre = uiInputSemestre.getLocalValue() == null ? ""
+                : uiInputSemestre.getLocalValue().toString();
+        String semestreId = uiInputSemestre.getClientId();
+        int sem = 0;
+        try {
+            sem = Integer.parseInt(semestre);
+        } catch (NumberFormatException nfe) {
+            if (locale.getLanguage().equals(new Locale("es").getLanguage())) {
+                FacesMessage msgSemestre = new FacesMessage("El semestre debe contener solo numeros.");
+                msgSemestre.setSeverity(FacesMessage.SEVERITY_ERROR);
+                fc.addMessage(semestreId, msgSemestre);
+                fc.renderResponse();
+            } else {
+                FacesMessage msgSemestre = new FacesMessage("The semester should contain only numbers.");
+                msgSemestre.setSeverity(FacesMessage.SEVERITY_ERROR);
+                fc.addMessage(semestreId, msgSemestre);
+                fc.renderResponse();
+            }
+        }
+        if (sem > 9 && sem != 0) {
+            if (locale.getLanguage().equals(new Locale("es").getLanguage())) {
+                FacesMessage msgSemestre = new FacesMessage("El semestre debe ser un numero entre 1 y 10.");
+                msgSemestre.setSeverity(FacesMessage.SEVERITY_ERROR);
+                fc.addMessage(semestreId, msgSemestre);
+                fc.renderResponse();
+            } else {
+                FacesMessage msgSemestre = new FacesMessage("The semester must be a number between 1 and 10.");
+                msgSemestre.setSeverity(FacesMessage.SEVERITY_ERROR);
+                fc.addMessage(semestreId, msgSemestre);
+                fc.renderResponse();
+            }
+        }
+    }
 }
