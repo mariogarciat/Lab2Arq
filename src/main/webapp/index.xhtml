@@ -17,25 +17,28 @@
         </h:form>
 
         <h:form prependId="false">
-            <f:event listener="#{estudianteBean.validateForm}" type="postValidate" />
+
             <h1><h:outputText value="#{msg.matricula_detalles}" /></h1>
 
             <h:panelGrid columns="3">
                 <p:outputLabel value="#{msg.cedula}" for="cedula" />
-                <p:inputText id="cedula" label="#{msg.cedula}" value="#{EstudianteBean.id}" required="true" disabled="#{EstudianteBean.disableDatos}">
+                <p:inputText id="cedula" label="#{msg.cedula}" value="#{EstudianteBean.id}" required="true" disabled="#{EstudianteBean.disableDatos}" validatorMessage="#{msg.cedula_formato}">
                     <f:attribute name="requiredMessage" value="#{msg.cedula_requerida}" />
+                    <f:validateRegex pattern="^[0-9]+$" />
                 </p:inputText>
                 <p:message for="cedula" styleClass="errmsg" />
 
                 <p:outputLabel value="#{msg.nombres}" for="nombres" />
-                <p:inputText id="nombres" label="#{msg.nombres}" value="#{EstudianteBean.name}" required="true" disabled="#{EstudianteBean.disableDatos}">
+                <p:inputText id="nombres" label="#{msg.nombres}" value="#{EstudianteBean.name}" required="true" disabled="#{EstudianteBean.disableDatos}" validatorMessage="#{msg.nombre_formato}">
                     <f:attribute name="requiredMessage" value="#{msg.nombres_requeridos}" />
+                    <f:validateRegex pattern="^[a-zA-Z ]+$" />
                 </p:inputText>
                 <p:message for="nombres" styleClass="errmsg" />
 
                 <p:outputLabel value="#{msg.apellidos}" for="apellidos" />
-                <p:inputText id="apellidos" label="#{msg.apellidos}" value="#{EstudianteBean.lastName}" required="true" disabled="#{EstudianteBean.disableDatos}">
+                <p:inputText id="apellidos" label="#{msg.apellidos}" value="#{EstudianteBean.lastName}" required="true" disabled="#{EstudianteBean.disableDatos}" validatorMessage="#{msg.apellido_formato}">
                     <f:attribute name="requiredMessage" value="#{msg.apellidos_requeridos}" />
+                    <f:validateRegex pattern="^[a-zA-Z ]+$" />
                 </p:inputText>
                 <p:message for="apellidos" styleClass="errmsg" />
 
@@ -62,15 +65,18 @@
             </h:panelGrid>
 
             <c:if test="#{EstudianteBean.disableCursos == true}">
-            <h2>Captcha</h2>
-            <p:messages id="msg" />
-            <p:captcha id="captcha" />
+                <h2>Captcha</h2>
+                <p:messages id="msg" />
+                <p:captcha id="captcha" />
             </c:if>
             <br />
 
             <p:commandButton id="boton" value="#{msg.consultar}" actionListener="#{EstudianteBean.search()}" disabled="#{EstudianteBean.disableDatos}" binding="#{EstudianteBean.find}" ajax="false" />
             <p:commandButton id="boton2" value="#{msg.guardar}" actionListener="#{EstudianteBean.matricular()}" disabled="#{!EstudianteBean.disableDatos}" action="submit" />
         </h:form>
+        <script type="text/javascript">
+            
+        </script>
 
         <script library="primefaces" name="jquery/jquery.js" />
     </h:body>
