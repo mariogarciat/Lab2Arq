@@ -338,5 +338,20 @@ public class EstudianteBean implements Serializable {
     public void setDisableDatos(boolean disableDatos) {
         this.disableDatos = disableDatos;
     }
+    
+    public String generarInfoQR(){
+        String info = "";
+        info = info + id + "\n";
+        info = info + name + "\n";
+        info = info + lastName + "\n";
+        info = info + level + "\n";
+        info = info + email + "\n";
+        for (Object curso : cursos_m) {
+            Curso aux = (Curso)curso;
+            info = info + aux.getNombre() + "\n";
+        }
+        
+        return info;
+    }
 
 }
